@@ -1,0 +1,62 @@
+identity:
+  author: "intsig-textin"
+  name: "xparse"
+  label:
+    en_US: "xParse"
+    zh_Hans: "xParse"
+    pt_BR: "xParse"
+    ja_JP: "xParse"
+  description:
+    en_US: "xParse is an end-to-end document processing AI infrastructure that efficiently converts unstructured documents into queryable and analyzable vector data assets."
+    zh_Hans: "xParse 是一个端到端文档处理 AI 基础设施，致力于将非结构化文档高效转化为可查询、可分析的向量数据资产。"
+    pt_BR: "xParse é uma infraestrutura de IA de processamento de documentos de ponta a ponta que converte eficientemente documentos não estruturados em ativos de dados vetoriais consultáveis e analisáveis."
+    ja_JP: "xParse は、非構造化ドキュメントを効率的にクエリ可能で分析可能なベクトルデータ資産に変換するエンドツーエンドのドキュメント処理 AI インフラストラクチャです。"
+  icon: "icon.svg"
+  tags:
+    - rag
+
+credentials_for_provider:
+  x_ti_app_id:
+    type: secret-input
+    required: true
+    label:
+      en_US: "x-ti-app-id"
+      zh_Hans: "x-ti-app-id"
+      pt_BR: "x-ti-app-id"
+      ja_JP: "x-ti-app-id"
+    placeholder:
+      en_US: "Please input your x-ti-app-id"
+      zh_Hans: "请输入你的 x-ti-app-id"
+      pt_BR: "Por favor, insira seu x-ti-app-id"
+      ja_JP: "x-ti-app-id を入力してください"
+    help:
+      en_US: "Get your x-ti-app-id from Textin workspace settings"
+      zh_Hans: "请从 Textin 工作台-账号设置-开发者信息 获取 x-ti-app-id"
+      pt_BR: "Obtenha seu x-ti-app-id nas configurações do workspace do Textin"
+      ja_JP: "Textin ワークスペース設定から x-ti-app-id を取得してください"
+    url: https://www.textin.com/console/dashboard/setting/
+  x_ti_secret_code:
+    type: secret-input
+    required: true
+    label:
+      en_US: "x-ti-secret-code"
+      zh_Hans: "x-ti-secret-code"
+      pt_BR: "x-ti-secret-code"
+      ja_JP: "x-ti-secret-code"
+    placeholder:
+      en_US: "Please input your x-ti-secret-code"
+      zh_Hans: "请输入你的 x-ti-secret-code"
+      pt_BR: "Por favor, insira seu x-ti-secret-code"
+      ja_JP: "x-ti-secret-code を入力してください"
+    help:
+      en_US: "Get your x-ti-secret-code from Textin workspace settings"
+      zh_Hans: "请从 Textin 工作台-账号设置-开发者信息 获取 x-ti-secret-code"
+      pt_BR: "Obtenha seu x-ti-secret-code nas configurações do workspace do Textin"
+      ja_JP: "Textin ワークスペース設定から x-ti-secret-code を取得してください"
+    url: https://www.textin.com/console/dashboard/setting/
+
+tools:
+  - tools/parse.yaml
+extra:
+  python:
+    source: provider/xparse.py

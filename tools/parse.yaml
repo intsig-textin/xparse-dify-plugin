@@ -1,0 +1,359 @@
+identity:
+  name: parse
+  author: intsig-textin
+  label:
+    en_US: Parse
+    zh_Hans: 文档解析
+    pt_BR: Parse
+    ja_JP: パース
+description:
+  human:
+    en_US: Document parsing tool that extracts structured content from various file formats (PDF, WORD, EXCEL, PPT, images, etc.)
+    zh_Hans: 文档解析工具，从多种文件格式（PDF、WORD、EXCEL、PPT、图片等）中提取结构化内容
+    pt_BR: Ferramenta de análise de documentos que extrai conteúdo estruturado de vários formatos de arquivo (PDF, WORD, EXCEL, PPT, imagens, etc.)
+    ja_JP: さまざまなファイル形式（PDF、WORD、EXCEL、PPT、画像など）から構造化されたコンテンツを抽出するドキュメント解析ツール
+  llm: A tool for parsing documents and extracting structured content from various file formats including PDF, WORD, EXCEL, PPT, and images.
+parameters:
+  - name: file
+    type: file
+    required: true
+    label:
+      en_US: File
+      zh_Hans: 文件
+      pt_BR: Arquivo
+      ja_JP: ファイル
+    human_description:
+      en_US: The file to be parsed (supports PDF, WORD, EXCEL, PPT, images, etc.)
+      zh_Hans: 需要解析的文件（支持 PDF、WORD、EXCEL、PPT、图片等多种格式）
+      pt_BR: O arquivo a ser analisado (suporta PDF, WORD, EXCEL, PPT, imagens, etc.)
+      ja_JP: 解析するファイル（PDF、WORD、EXCEL、PPT、画像などに対応）
+    llm_description: The file to be parsed, supporting PDF, WORD, EXCEL, PPT, images and other formats
+    form: llm
+
+  - name: provider
+    type: select
+    required: false
+    default: textin
+    label:
+      en_US: Provider
+      zh_Hans: 解析引擎
+      pt_BR: Provedor
+      ja_JP: プロバイダー
+    human_description:
+      en_US: The document parsing provider/engine to use
+      zh_Hans: 使用的文档解析引擎
+      pt_BR: O provedor/motor de análise de documentos a ser usado
+      ja_JP: 使用するドキュメント解析プロバイダー/エンジン
+    llm_description: The document parsing provider/engine to use for parsing
+    form: form
+    options:
+      - value: textin
+        label:
+          en_US: TextIn (Recommended)
+          zh_Hans: TextIn（推荐）
+          pt_BR: TextIn (Recomendado)
+          ja_JP: TextIn（推奨）
+      - value: textin-lite
+        label:
+          en_US: TextIn Lite
+          zh_Hans: TextIn Lite
+          pt_BR: TextIn Lite
+          ja_JP: TextIn Lite
+      - value: mineru
+        label:
+          en_US: MinerU
+          zh_Hans: MinerU
+          pt_BR: MinerU
+          ja_JP: MinerU
+      - value: paddle
+        label:
+          en_US: PaddleOCR
+          zh_Hans: PaddleOCR
+          pt_BR: PaddleOCR
+          ja_JP: PaddleOCR
+
+  - name: pdf_pwd
+    type: string
+    required: false
+    label:
+      en_US: PDF Password
+      zh_Hans: PDF 密码
+      pt_BR: Senha PDF
+      ja_JP: PDF パスワード
+    human_description:
+      en_US: Password for encrypted PDF files
+      zh_Hans: 加密 PDF 文件的密码
+      pt_BR: Senha para arquivos PDF criptografados
+      ja_JP: 暗号化された PDF ファイルのパスワード
+    llm_description: Password for encrypted PDF files
+    form: form
+
+  - name: page_ranges
+    type: string
+    required: false
+    label:
+      en_US: Page Ranges
+      zh_Hans: 页码范围
+      pt_BR: Intervalos de Páginas
+      ja_JP: ページ範囲
+    human_description:
+      en_US: Specify page ranges to parse (e.g., "1,3,5-7" for pages 1, 3, 5, 6, 7)
+      zh_Hans: 指定要解析的页码范围（例如 "1,3,5-7" 表示解析第 1、3、5、6、7 页）
+      pt_BR: "Especifique os intervalos de páginas para analisar (ex: \"1,3,5-7\" para páginas 1, 3, 5, 6, 7)"
+      ja_JP: "解析するページ範囲を指定（例: \"1,3,5-7\" は 1、3、5、6、7 ページを解析）"
+    llm_description: "Specify page ranges to parse, format: \"15\" for page 15, \"20-25\" for pages 20-25, \"1,3,5-7\" for pages 1, 3, 5, 6, 7"
+    form: form
+    placeholder:
+      en_US: e.g., 1,3,5-7
+      zh_Hans: 例如：1,3,5-7
+      pt_BR: "ex: 1,3,5-7"
+      ja_JP: "例: 1,3,5-7"
+
+  - name: crop_dewarp
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Crop Dewarp
+      zh_Hans: 切边矫正
+      pt_BR: Correção de Recorte
+      ja_JP: クロップ補正
+    human_description:
+      en_US: Whether to perform crop and dewarp preprocessing
+      zh_Hans: 是否进行切边矫正预处理
+      pt_BR: Se deve realizar pré-processamento de recorte e correção
+      ja_JP: クロップと補正の前処理を実行するかどうか
+    llm_description: "Whether to perform crop and dewarp preprocessing (0: no, 1: yes)"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+          pt_BR: Não
+          ja_JP: いいえ
+      - value: "1"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+          pt_BR: Sim
+          ja_JP: はい
+
+  - name: remove_watermark
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Remove Watermark
+      zh_Hans: 去水印
+      pt_BR: Remover Marca d'Água
+      ja_JP: 透かし削除
+    human_description:
+      en_US: Whether to remove watermark preprocessing
+      zh_Hans: 是否进行去水印预处理
+      pt_BR: Se deve realizar pré-processamento de remoção de marca d'água
+      ja_JP: 透かし削除の前処理を実行するかどうか
+    llm_description: "Whether to remove watermark preprocessing (0: no, 1: yes)"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+          pt_BR: Não
+          ja_JP: いいえ
+      - value: "1"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+          pt_BR: Sim
+          ja_JP: はい
+
+  - name: get_page_image
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Get Page Image
+      zh_Hans: 返回页面图片
+      pt_BR: Obter Imagem da Página
+      ja_JP: ページ画像を取得
+    human_description:
+      en_US: Whether to return page images (for PDF and other formats that need to be converted to images)
+      zh_Hans: 是否返回每一页的图片（适用于 PDF 等需要转成图片解析的文件）
+      pt_BR: Se deve retornar imagens de página (para PDF e outros formatos que precisam ser convertidos em imagens)
+      ja_JP: ページ画像を返すかどうか（PDF など画像に変換する必要があるファイル形式用）
+    llm_description: "Whether to return page images (0: no, 1: yes)"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+          pt_BR: Não
+          ja_JP: いいえ
+      - value: "1"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+          pt_BR: Sim
+          ja_JP: はい
+
+  - name: get_sub_image
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Get Sub Image
+      zh_Hans: 返回子图
+      pt_BR: Obter Sub-imagem
+      ja_JP: サブ画像を取得
+    human_description:
+      en_US: Whether to return sub-images within pages
+      zh_Hans: 是否返回页面内的子图
+      pt_BR: Se deve retornar sub-imagens dentro das páginas
+      ja_JP: ページ内のサブ画像を返すかどうか
+    llm_description: "Whether to return sub-images within pages (0: no, 1: yes)"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+          pt_BR: Não
+          ja_JP: いいえ
+      - value: "1"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+          pt_BR: Sim
+          ja_JP: はい
+
+  - name: parse_mode
+    type: select
+    required: false
+    default: scan
+    label:
+      en_US: Parse Mode
+      zh_Hans: 解析模式
+      pt_BR: Modo de Análise
+      ja_JP: 解析モード
+    human_description:
+      en_US: PDF parsing mode (only for textin provider, images always use scan mode)
+      zh_Hans: PDF 解析模式（仅适用于 textin 引擎，图片始终使用 scan 模式）
+      pt_BR: Modo de análise PDF (apenas para provedor textin, imagens sempre usam modo scan)
+      ja_JP: PDF 解析モード（textin プロバイダーのみ、画像は常に scan モードを使用）
+    llm_description: "PDF parsing mode, auto: extract text directly from PDF, scan: treat PDF as images (only for textin provider)"
+    form: form
+    options:
+      - value: auto
+        label:
+          en_US: Auto
+          zh_Hans: 自动
+          pt_BR: Automático
+          ja_JP: 自動
+      - value: scan
+        label:
+          en_US: Scan
+          zh_Hans: 扫描
+          pt_BR: Digitalizar
+          ja_JP: スキャン
+
+  - name: underline_level
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Underline Level
+      zh_Hans: 下划线识别
+      pt_BR: Nível de Sublinhado
+      ja_JP: 下線レベル
+    human_description:
+      en_US: Control underline recognition range (only for textin provider, scan mode)
+      zh_Hans: 控制下划线识别范围（仅适用于 textin 引擎，scan 模式）
+      pt_BR: Controlar o intervalo de reconhecimento de sublinhado (apenas para provedor textin, modo scan)
+      ja_JP: 下線認識範囲を制御（textin プロバイダーのみ、scan モード）
+    llm_description: "Control underline recognition range, 0: no recognition, 1: only recognize underlines without text (only for textin provider, scan mode)"
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: No Recognition
+          zh_Hans: 不识别
+          pt_BR: Sem Reconhecimento
+          ja_JP: 認識なし
+      - value: "1"
+        label:
+          en_US: Underlines Without Text Only
+          zh_Hans: 仅识别无文字的下划线
+          pt_BR: Apenas Sublinhados sem Texto
+          ja_JP: テキストなしの下線のみ
+
+  - name: apply_chart
+    type: select
+    required: false
+    default: "0"
+    label:
+      en_US: Apply Chart
+      zh_Hans: 图表识别
+      pt_BR: Aplicar Gráfico
+      ja_JP: チャート適用
+    human_description:
+      en_US: Whether to enable chart recognition (only for textin provider, recognized charts will be output as tables)
+      zh_Hans: 是否开启图表识别（仅适用于 textin 引擎，开启后会将识别到的图表以表格形式输出）
+      pt_BR: Se deve habilitar reconhecimento de gráficos (apenas para provedor textin, gráficos reconhecidos serão exibidos como tabelas)
+      ja_JP: チャート認識を有効にするかどうか（textin プロバイダーのみ、認識されたチャートはテーブルとして出力されます）
+    llm_description: Whether to enable chart recognition, recognized charts will be output as tables (only for textin provider)
+    form: form
+    options:
+      - value: "0"
+        label:
+          en_US: "No"
+          zh_Hans: 否
+          pt_BR: Não
+          ja_JP: いいえ
+      - value: "1"
+        label:
+          en_US: "Yes"
+          zh_Hans: 是
+          pt_BR: Sim
+          ja_JP: はい
+
+  - name: image_storage_config
+    type: string
+    required: false
+    label:
+      en_US: Image Storage Config
+      zh_Hans: 图片存储配置
+      pt_BR: Configuração de Armazenamento de Imagem
+      ja_JP: 画像ストレージ設定
+    human_description:
+      en_US: JSON format S3 storage configuration for storing page images (optional)
+      zh_Hans: JSON 格式的 S3 存储配置，用于存储页面图片（可选）
+      pt_BR: Configuração de armazenamento S3 em formato JSON para armazenar imagens de página (opcional)
+      ja_JP: ページ画像を保存するための JSON 形式の S3 ストレージ設定（オプション）
+    llm_description: JSON format S3 storage configuration for storing page images, including endpoint, access_key, secret_key, bucket, region, prefix, url_prefix
+    form: form
+    placeholder:
+      en_US: Enter JSON configuration
+      zh_Hans: 输入JSON配置
+      pt_BR: Insira a configuração JSON
+      ja_JP: JSON 設定を入力
+
+output_schema:
+  type: object
+  properties:
+    elements:
+      type: array
+      items:
+        type: object
+      description: The structured elements extracted from the file
+    images:
+      type: array
+      items:
+        type: object
+      description: The images extracted from the file (if get_sub_image or get_page_image is enabled)
+
+extra:
+  python:
+    source: tools/parse.py
