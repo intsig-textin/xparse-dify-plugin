@@ -8,10 +8,10 @@ label:
   zh_Hans: xParse
   pt_BR: xParse
 description:
-  en_US: xParse
-  ja_JP: xParse
-  zh_Hans: xParse
-  pt_BR: xParse
+  en_US: xParse is a modern AI infrastructure for document processing, built for RAG and agentic workflows on LLMs.
+  ja_JP: xParse は RAG、AI エージェント、LLM 向けの現代のドキュメント処理 AI インフラストラクチャです。
+  zh_Hans: xParse 是面向 RAG、Agent、LLM 应用的文档处理 AI 基础设施。
+  pt_BR: xParse é uma infraestrutura de IA de processamento de documentos de ponta a ponta para RAG, AI Agents, LLMs.
 icon: icon.svg
 icon_dark: icon-dark.svg
 resource:
