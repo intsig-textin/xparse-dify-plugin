@@ -259,5 +259,7 @@ Common fields include:
 - The `elements` field is useful for structured processing, highlighting, or further analysis.
 - The `images` field provides all image resources for preview or download.
 - The `metadata` object in each element may contain additional fields depending on the extraction process and file type.
-- Image processing: When `get_sub_image` or `get_page_image` is enabled, images are automatically uploaded to Dify's file system and their URLs are included in the response.
+- Image processing:
+  - When `get_sub_image` is enabled, images (`image_base64`) are automatically decoded and uploaded to Dify's file system. Their `preview_url` and `dify_file_id` are included in the response `metadata`, and images are added to the `images` list.
+  - When `get_page_image` is enabled, page image URLs (`page_image_url`) are directly included in the response `metadata` and are not uploaded to Dify's file system.
 
