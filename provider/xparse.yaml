@@ -12,9 +12,7 @@ identity:
     pt_BR: "xParse é uma infraestrutura de IA de processamento de documentos de ponta a ponta que converte eficientemente documentos não estruturados em ativos de dados vetoriais consultáveis e analisáveis."
     ja_JP: "xParse は、非構造化ドキュメントを効率的にクエリ可能で分析可能なベクトルデータ資産に変換するエンドツーエンドのドキュメント処理 AI インフラストラクチャです。"
   icon: "icon.svg"
-  tags:
-    - rag
-    - agent
+  tags: []
 
 credentials_for_provider:
   x_ti_app_id:
