@@ -16,12 +16,12 @@ xParse Document Parsing Tool extracts structured content from various file forma
 
 When configuring the plugin in Dify, you need to provide the following credentials:
 
-> **Get your credentials:** Please [log in to Textin](https://www.textin.com/console/dashboard/setting) and go to **Workspace → Account Settings → Developer Information** to view your `x-ti-app-id` and `x-ti-secret-code`.
+> **Get your credentials:** Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to **Workspace → Account Settings → Developer Information** to view your `x-ti-app-id` and `x-ti-secret-code`.
 
 | Parameter | Type | Required | Description |
 | --------- | ---- | -------- | ---------- |
-| `x-ti-app-id` | secret-input | Yes | Textin application ID. Please [log in to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-app-id. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
-| `x-ti-secret-code` | secret-input | Yes | Textin secret code. Please [log in to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-secret-code. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
+| `x-ti-app-id` | secret-input | Yes | Textin application ID. Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-app-id. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
+| `x-ti-secret-code` | secret-input | Yes | Textin secret code. Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-secret-code. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
 
 ---
 
@@ -276,39 +276,6 @@ The `metadata` field provides contextual information:
 - [Parse Sync API](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync)
 - [Parse Config Documentation](https://docs.textin.com/xparse/v1/parse-config)
 - [Parse Response Documentation](https://docs.textin.com/xparse/v1/parse-response)
-
----
-
-## Breaking Changes in v1.2.0
-
-This version migrates from the legacy Pipeline API to the new Parse Sync API (v1.3.0). Key changes:
-
-**Removed Parameters:**
-- `provider` - no longer exposed (always uses textin engine)
-- `crop_dewarp` - not available in new API
-- `remove_watermark` - not available in new API
-- `get_page_image` - replaced by `pages` capability
-- `get_sub_image` - replaced by `include_image_data` capability
-- `parse_mode` - not available in new API
-- `underline_level` - not available in new API
-- `apply_chart` - not available in new API
-- `image_storage_config` - not available in new API
-
-**New Parameters:**
-- `include_hierarchy` (boolean) - control element relationship data
-- `include_inline_objects` (boolean) - extract formulas, handwriting, etc.
-- `include_char_details` (boolean) - character-level recognition details
-- `include_image_data` (boolean) - image data with auto-upload to Dify
-- `include_table_structure` (boolean) - detailed table structure
-- `pages` (boolean) - page metadata list
-- `title_tree` (boolean) - document outline
-- `table_view` (select) - table format in markdown
-
-**Output Changes:**
-- `text` now comes directly from API's `markdown` field
-- `elements` structure updated to match new API schema
-- New output variables: `pages`, `title_tree`
-- `images` only returned when `include_image_data` is enabled
 
 ---
 

@@ -279,39 +279,6 @@ xParse 解析工具提供参数来自定义文档处理并控制返回数据的�
 
 ---
 
-## v1.2.0 破坏性变更
-
-此版本从旧的 Pipeline API 迁移到新的 Parse Sync API (v1.3.0)。主要变更：
-
-**移除的参数：**
-- `provider` - 不再暴露（始终使用 textin 引擎）
-- `crop_dewarp` - 新 API 中不可用
-- `remove_watermark` - 新 API 中不可用
-- `get_page_image` - 由 `pages` capability 替代
-- `get_sub_image` - 由 `include_image_data` capability 替代
-- `parse_mode` - 新 API 中不可用
-- `underline_level` - 新 API 中不可用
-- `apply_chart` - 新 API 中不可用
-- `image_storage_config` - 新 API 中不可用
-
-**新增参数：**
-- `include_hierarchy` (boolean) - 控制元素关系数据
-- `include_inline_objects` (boolean) - 提取公式、手写等
-- `include_char_details` (boolean) - 字符级识别详情
-- `include_image_data` (boolean) - 图片数据（自动上传到 Dify）
-- `include_table_structure` (boolean) - 详细表格结构
-- `pages` (boolean) - 页面元信息列表
-- `title_tree` (boolean) - 文档大纲
-- `table_view` (select) - markdown 中的表格格式
-
-**输出变更：**
-- `text` 现在直接来自 API 的 `markdown` 字段
-- `elements` 结构更新以匹配新 API schema
-- 新增输出变量：`pages`、`title_tree`
-- `images` 仅在启用 `include_image_data` 时返回
-
----
-
 ## 注意事项
 
 - `text` 字段包含完整的 Markdown 表示，适合直接显示。
