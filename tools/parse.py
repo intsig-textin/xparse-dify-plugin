@@ -13,7 +13,7 @@ from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
 logger = logging.getLogger(__name__)
 
-XPARSE_API_URL = "https://api.textin.com/api/xparse/pipeline"
+XPARSE_API_URL = "https://api.textin.com/api/v1/xparse/parse/sync"
 
 
 @dataclass
@@ -65,54 +65,28 @@ class ParseTool(Tool):
             )
 
     def _build_parse_config(self, tool_parameters: dict[str, Any]) -> dict[str, Any]:
-        """Build parse configuration from tool parameters."""
-        config: dict[str, Any] = {
-            "provider": tool_parameters.get("provider", "textin"),
+        """Build parse configuration from tool parameters for Parse Sync API v1.3.0."""
+        config: dict[str, Any] = {}
+
+        # document section (optional)
+        if tool_parameters.get("pdf_pwd"):
+            config["document"] = {"password": tool_parameters["pdf_pwd"]}
+
+        # capabilities section (always present)
+        config["capabilities"] = {
+            "include_hierarchy": tool_parameters.get("include_hierarchy", True),
+            "include_inline_objects": tool_parameters.get("include_inline_objects", False),
+            "include_char_details": tool_parameters.get("include_char_details", False),
+            "include_image_data": tool_parameters.get("include_image_data", False),
+            "include_table_structure": tool_parameters.get("include_table_structure", False),
+            "pages": tool_parameters.get("pages", False),
+            "title_tree": tool_parameters.get("title_tree", False),
+            "table_view": tool_parameters.get("table_view", "html"),
         }
 
-        # Add optional parameters if provided
-        if tool_parameters.get("pdf_pwd"):
-            config["pdf_pwd"] = tool_parameters["pdf_pwd"]
-
+        # scope section (optional)
         if tool_parameters.get("page_ranges"):
-            config["page_ranges"] = tool_parameters["page_ranges"]
-
-        # select 类型通常传 "0"/"1"，"0" 在 Python 中也是真值；这里用 is not None 更稳妥
-        if tool_parameters.get("crop_dewarp") is not None:
-            config["crop_dewarp"] = int(tool_parameters["crop_dewarp"])
-
-        if tool_parameters.get("remove_watermark") is not None:
-            config["remove_watermark"] = int(tool_parameters["remove_watermark"])
-
-        if tool_parameters.get("get_page_image") is not None:
-            config["get_page_image"] = tool_parameters["get_page_image"]
-
-        if tool_parameters.get("get_sub_image") is not None:
-            config["get_sub_image"] = tool_parameters["get_sub_image"]
-
-        # Textin-specific parameters (only apply when provider is textin)
-        provider = config.get("provider", "textin")
-        if provider == "textin":
-            if tool_parameters.get("parse_mode"):
-                config["parse_mode"] = tool_parameters["parse_mode"]
-
-            if tool_parameters.get("underline_level") is not None:
-                config["underline_level"] = int(tool_parameters["underline_level"])
-
-            if tool_parameters.get("apply_chart") is not None:
-                config["apply_chart"] = int(tool_parameters["apply_chart"])
-
-        # Image storage config (optional JSON string)
-        if tool_parameters.get("image_storage_config"):
-            try:
-                image_storage_config = json.loads(
-                    tool_parameters["image_storage_config"]
-                )
-                config["image_storage_config"] = image_storage_config
-            except json.JSONDecodeError as e:
-                logger.warning(
-                    f"Invalid image_storage_config JSON, ignoring: {e}"
-                )
+            config["scope"] = {"page_range": tool_parameters["page_ranges"]}
 
         return config
 
@@ -128,25 +102,21 @@ class ParseTool(Tool):
         # Build parse configuration
         parse_config = self._build_parse_config(tool_parameters)
 
-        # Build stages configuration
-        stages = [{"type": "parse", "config": parse_config}]
-
         # Prepare request
         headers = {
             "x-ti-app-id": credentials.x_ti_app_id,
             "x-ti-secret-code": credentials.x_ti_secret_code,
         }
 
-        # OpenAPI: multipart/form-data，其中 stages 字段虽然是 string，但编码为 application/json
-        # 实测如果不按 application/json 发送，可能出现 code=200 但 elements 为空。
-        stages_json = json.dumps(stages, ensure_ascii=False)
+        # Prepare multipart/form-data with config as JSON
+        config_json = json.dumps(parse_config, ensure_ascii=False)
         files = {
             "file": (file.filename, file.blob, file.mime_type),
-            "stages": (None, stages_json, "application/json"),
+            "config": (None, config_json, "application/json"),
         }
 
         try:
-            # Call xparse Pipeline API
+            # Call xparse Parse Sync API
             response = requests.post(
                 XPARSE_API_URL, headers=headers, files=files, timeout=300
             )
@@ -160,23 +130,25 @@ class ParseTool(Tool):
                 logger.error(f"xparse API error: {error_msg}")
                 raise Exception(f"xparse API error: {error_msg}")
 
-            # Extract elements from response
-            elements = result.get("data", {}).get("elements", [])
-            # Process elements and extract text/images
-            text = ""
-            images = []
+            # Extract data from response
+            data = result.get("data", {})
+            markdown = data.get("markdown", "")
+            elements = data.get("elements", [])
+            pages = data.get("pages", [])
+            title_tree = data.get("title_tree", [])
 
+            # Process images if include_image_data is enabled
+            images = []
             for element in elements:
                 element_type = element.get("type", "")
-                element_text = element.get("text", "")
-                metadata = element.get("metadata", {})
+                image_data = element.get("image_data", {})
 
-                # Handle images
-                if element_type == "Image" and metadata.get("image_base64"):
+                # Handle images with base64 data
+                if element_type == "Image" and image_data.get("base64"):
                     try:
-                        base64_data = metadata["image_base64"]
+                        base64_data = image_data["base64"]
                         image_bytes = base64.b64decode(base64_data)
-                        mime_type = metadata.get("image_mime_type", "image/png")
+                        mime_type = image_data.get("mime_type", "image/png")
                         extension = guess_extension(mime_type) or ".png"
                         image_name = f"image_{element.get('element_id', 'unknown')}{extension}"
 
@@ -188,35 +160,21 @@ class ParseTool(Tool):
                         )
                         images.append(file_res)
 
-                        # Update metadata
-                        metadata["preview_url"] = file_res.preview_url
-                        metadata["dify_file_id"] = file_res.id
-                        metadata.pop("image_base64", None)
-
-                        # Add image to text output
-                        if file_res.preview_url:
-                            text += f"![]({file_res.preview_url})\n"
-                        else:
-                            # If no preview URL, send as blob
-                            yield self.create_blob_message(
-                                image_bytes,
-                                meta={"filename": image_name, "mime_type": mime_type},
-                            )
+                        # Update image_data with preview info
+                        image_data["preview_url"] = file_res.preview_url
+                        image_data["dify_file_id"] = file_res.id
+                        # Remove base64 to reduce response size
+                        del image_data["base64"]
                     except Exception as e:
                         logger.warning(f"Failed to process image: {e}")
 
-                # Handle page images (if get_page_image is enabled)
-                if metadata.get("page_image_url"):
-                    # Page images are already URLs, no need to decode
-                    text += f"![Page Image]({metadata['page_image_url']})\n"
-
-                # Add element text
-                if element_text:
-                    text += f"\n{element_text}"
-
             # Return results
-            yield self.create_text_message(text)
+            yield self.create_text_message(markdown)
             yield self.create_variable_message("elements", elements)
+            if pages:
+                yield self.create_variable_message("pages", pages)
+            if title_tree:
+                yield self.create_variable_message("title_tree", title_tree)
             if images:
                 yield self.create_variable_message("images", images)
 

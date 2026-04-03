@@ -1,6 +1,7 @@
 identity:
   author: "intsig-textin"
   name: "xparse"
+  version: "1.2.0"
   label:
     en_US: "xParse"
     zh_Hans: "xParse"
