@@ -14,6 +14,48 @@ description:
     ja_JP: さまざまなファイル形式（PDF、WORD、EXCEL、PPT、画像など）から構造化されたコンテンツを抽出するドキュメント解析ツール
   llm: A tool for parsing documents and extracting structured content from various file formats including PDF, WORD, EXCEL, PPT, and images.
 parameters:
+  - name: x_ti_app_id
+    type: secret-input
+    required: false
+    label:
+      en_US: "x-ti-app-id"
+      zh_Hans: "x-ti-app-id"
+      pt_BR: "x-ti-app-id"
+      ja_JP: "x-ti-app-id"
+    human_description:
+      en_US: "Optional: input your x-ti-app-id for paid API. Leave empty to use the free API."
+      zh_Hans: "可选：输入你的 x-ti-app-id 以使用付费 API，留空则使用免费 API。"
+      pt_BR: "Opcional: insira seu x-ti-app-id para API paga. Deixe em branco para usar a API gratuita."
+      ja_JP: "オプション：有料 API 用の x-ti-app-id を入力。空欄で無料 API を使用。"
+    llm_description: "Optional x-ti-app-id for paid API. Leave empty to use the free API."
+    form: form
+    placeholder:
+      en_US: "Leave empty for free API"
+      zh_Hans: "留空使用免费 API"
+      pt_BR: "Deixe em branco para API gratuita"
+      ja_JP: "空欄で無料 API を使用"
+
+  - name: x_ti_secret_code
+    type: secret-input
+    required: false
+    label:
+      en_US: "x-ti-secret-code"
+      zh_Hans: "x-ti-secret-code"
+      pt_BR: "x-ti-secret-code"
+      ja_JP: "x-ti-secret-code"
+    human_description:
+      en_US: "Optional: input your x-ti-secret-code for paid API. Leave empty to use the free API."
+      zh_Hans: "可选：输入你的 x-ti-secret-code 以使用付费 API，留空则使用免费 API。"
+      pt_BR: "Opcional: insira seu x-ti-secret-code para API paga. Deixe em branco para usar a API gratuita."
+      ja_JP: "オプション：有料 API 用の x-ti-secret-code を入力。空欄で無料 API を使用。"
+    llm_description: "Optional x-ti-secret-code for paid API. Leave empty to use the free API."
+    form: form
+    placeholder:
+      en_US: "Leave empty for free API"
+      zh_Hans: "留空使用免费 API"
+      pt_BR: "Deixe em branco para API gratuita"
+      ja_JP: "空欄で無料 API を使用"
+
   - name: file
     type: file
     required: true

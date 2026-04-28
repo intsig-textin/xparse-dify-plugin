@@ -9,7 +9,6 @@ from typing import Any
 import requests
 from dify_plugin import Tool
 from dify_plugin.entities.tool import ToolInvokeMessage
-from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +24,10 @@ class Credentials:
 
 
 class ParseTool(Tool):
-    def _get_credentials(self) -> Credentials:
-        """Get credentials. Returns free API mode if credentials are empty."""
-        x_ti_app_id = self.runtime.credentials.get("x_ti_app_id", "")
-        x_ti_secret_code = self.runtime.credentials.get("x_ti_secret_code", "")
+    def _get_credentials(self, tool_parameters: dict[str, Any]) -> Credentials:
+        """Get credentials from tool parameters. Returns free API mode if empty."""
+        x_ti_app_id = tool_parameters.get("x_ti_app_id", "")
+        x_ti_secret_code = tool_parameters.get("x_ti_secret_code", "")
 
         if x_ti_app_id and x_ti_secret_code:
             return Credentials(
@@ -42,16 +41,6 @@ class ParseTool(Tool):
             x_ti_secret_code="",
             is_free_api=True,
         )
-
-    def validate_api_credentials(self) -> None:
-        """Validate API credentials for paid API mode."""
-        credentials = self._get_credentials()
-        if credentials.is_free_api:
-            return
-        if not credentials.x_ti_app_id or not credentials.x_ti_secret_code:
-            raise ToolProviderCredentialValidationError(
-                "Invalid credentials"
-            )
 
     def _build_parse_config(self, tool_parameters: dict[str, Any]) -> dict[str, Any]:
         """Build parse configuration from tool parameters for Parse Sync API v1.3.0."""
@@ -81,7 +70,7 @@ class ParseTool(Tool):
 
     def _invoke(self, tool_parameters: dict[str, Any]) -> Generator[ToolInvokeMessage]:
         """Invoke the parse tool to extract structured content from documents."""
-        credentials = self._get_credentials()
+        credentials = self._get_credentials(tool_parameters)
 
         # Get file from parameters
         file = tool_parameters.get("file")

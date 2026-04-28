@@ -15,46 +15,6 @@ identity:
   icon: "icon.svg"
   tags: ['rag', 'utilities']
 
-credentials_for_provider:
-  x_ti_app_id:
-    type: secret-input
-    required: false
-    label:
-      en_US: "x-ti-app-id"
-      zh_Hans: "x-ti-app-id"
-      pt_BR: "x-ti-app-id"
-      ja_JP: "x-ti-app-id"
-    placeholder:
-      en_US: "Optional: input your x-ti-app-id for paid API"
-      zh_Hans: "可选：输入你的 x-ti-app-id 以使用付费 API"
-      pt_BR: "Opcional: insira seu x-ti-app-id para API paga"
-      ja_JP: "オプション：有料 API 用の x-ti-app-id を入力"
-    help:
-      en_US: "Only required for paid API. Leave empty to use the free API. Get your x-ti-app-id from Textin workspace settings."
-      zh_Hans: "仅付费 API 需要，留空则使用免费 API。请从 Textin 工作台-账号设置-开发者信息 获取 x-ti-app-id。"
-      pt_BR: "Necessário apenas para API paga. Deixe em branco para usar a API gratuita. Obtenha seu x-ti-app-id nas configurações do workspace do Textin."
-      ja_JP: "有料 API のみ必要。空欄で無料 API を使用。Textin ワークスペース設定から x-ti-app-id を取得してください。"
-    url: https://www.textin.com/console/dashboard/setting/
-  x_ti_secret_code:
-    type: secret-input
-    required: false
-    label:
-      en_US: "x-ti-secret-code"
-      zh_Hans: "x-ti-secret-code"
-      pt_BR: "x-ti-secret-code"
-      ja_JP: "x-ti-secret-code"
-    placeholder:
-      en_US: "Optional: input your x-ti-secret-code for paid API"
-      zh_Hans: "可选：输入你的 x-ti-secret-code 以使用付费 API"
-      pt_BR: "Opcional: insira seu x-ti-secret-code para API paga"
-      ja_JP: "オプション：有料 API 用の x-ti-secret-code を入力"
-    help:
-      en_US: "Only required for paid API. Leave empty to use the free API. Get your x-ti-secret-code from Textin workspace settings."
-      zh_Hans: "仅付费 API 需要，留空则使用免费 API。请从 Textin 工作台-账号设置-开发者信息 获取 x-ti-secret-code。"
-      pt_BR: "Necessário apenas para API paga. Deixe em branco para usar a API gratuita. Obtenha seu x-ti-secret-code nas configurações do workspace do Textin."
-      ja_JP: "有料 API のみ必要。空欄で無料 API を使用。Textin ワークスペース設定から x-ti-secret-code を取得してください。"
-    url: https://www.textin.com/console/dashboard/setting/
-
 tools:
   - tools/parse.yaml
 extra:
