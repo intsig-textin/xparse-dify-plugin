@@ -1,27 +1,59 @@
-# xParse Document Parsing Tool
+# xParse for RAG and Agents
 
 **Author:** intsig-textin  
-**Version:** 1.2.0  
+**Version:** 1.2.1
 **Type:** tool
 
 ---
 
 ## Description
 
-xParse Document Parsing Tool extracts structured content from various file formats (PDF, WORD, EXCEL, PPT, images, etc.) and converts them into AI-friendly structured data with rich metadata.
+Parse complex documents into Markdown, structured elements, tables, and images for RAG pipelines and agent workflows.
+
+xParse is a structured document parsing tool built for RAG pipelines and agent workflows. It parses PDFs, Word, Excel, PowerPoint, images, and other files into model-ready outputs, including Markdown text, structured elements, tables, and images.
+
+Unlike simple document-to-text conversion tools, xParse is designed for workflows that need richer document structure and layout-aware understanding. It helps turn complex files into content that can be used for knowledge ingestion, retrieval, agent reasoning, information extraction, and downstream automation.
+
+Use xParse when your workflow needs more than plain text output — for example, when you need document sections, titles, tables, image blocks, page-level metadata, or structured content elements that can be passed into later nodes in Dify. xParse returns Markdown in the `text` field, structured blocks in `elements`, and image resources in `images`, which makes it more suitable for multi-step workflows than a simple Markdown-only parser.
+
+**Supports both Free API and Paid API** — install and use immediately without any credentials.
+
+---
+
+## Best For
+
+- RAG document preprocessing
+- Knowledge base ingestion
+- Agent document reading and reasoning
+- Structured information extraction
+- Table and layout-aware parsing
+- Multi-step workflow automation
+- Image-aware document understanding
+
+---
+
+## Quick Start
+
+### 1. Free API (Default, No Credentials Required)
+
+Simply install the plugin in Dify and start using it — **no credentials needed**. Leave the `x-ti-app-id` and `x-ti-secret-code` fields empty during provider configuration.
+
+The free API supports PDF and images (JPG/PNG/BMP/TIFF/WebP), with a daily limit of 1,000 pages.
+
+### 2. Paid API (Optional)
+
+For higher usage or more formats (Word/Excel/PPT/HTML/OFD and 20+ other formats), get credentials from [Textin Console](https://www.textin.com/user/login?redirect=%252Fconsole%252Fdashboard%252Fsetting&from=xparse-dify-plugin) and fill in `x-ti-app-id` and `x-ti-secret-code` in the provider configuration.
 
 ---
 
 ## Provider Credentials
 
-When configuring the plugin in Dify, you need to provide the following credentials:
-
-> **Get your credentials:** Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to **Workspace → Account Settings → Developer Information** to view your `x-ti-app-id` and `x-ti-secret-code`.
-
 | Parameter | Type | Required | Description |
 | --------- | ---- | -------- | ---------- |
-| `x-ti-app-id` | secret-input | Yes | Textin application ID. Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-app-id. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
-| `x-ti-secret-code` | secret-input | Yes | Textin secret code. Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to "Workspace → Account Settings → Developer Information" to view x-ti-secret-code. See [API Documentation](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync) for details. |
+| `x-ti-app-id` | secret-input | No | Textin application ID. Only required for paid API. Leave empty to use the free API. |
+| `x-ti-secret-code` | secret-input | No | Textin secret code. Only required for paid API. Leave empty to use the free API. |
+
+> **Get credentials for paid API:** Please [login to Textin](https://www.textin.com/console/dashboard/setting) and go to **Workspace → Account Settings → Developer Information** to view your `x-ti-app-id` and `x-ti-secret-code`.
 
 ---
 
@@ -57,6 +89,20 @@ Control what additional information is included in the response:
 | `pages` | boolean | No | `false` | Whether to return page metadata list (page dimensions, page_image_url, element_ids per page) |
 | `title_tree` | boolean | No | `false` | Whether to return hierarchical title tree (table of contents) |
 | `table_view` | select | No | `html` | Format of tables in markdown. Options: `markdown` (simple), `html` (supports complex tables with merged cells) |
+
+---
+
+## API Limits
+
+| Limit | Free API | Paid API |
+|-------|----------|----------|
+| Supported formats | PDF, images (JPG/PNG/BMP/TIFF/WebP) | 20+ formats (PDF, images, Word, Excel, PPT, HTML, OFD, etc.) |
+| Daily usage | 1,000 pages | Per plan |
+| File size | 10MB | 500MB |
+| PDF pages | — | 1,000 pages |
+| XLS/XLSX/CSV | — | ≤ 2,000 rows × 100 cols per sheet |
+| TXT | — | ≤ 100KB |
+| Image dimensions | 20–20,000 px | 20–20,000 px |
 
 ---
 
@@ -261,13 +307,22 @@ The `metadata` field provides contextual information:
 
 ---
 
+## Typical Workflow Use Cases
+
+1. **Knowledge ingestion for RAG** — Upload a PDF or Office file → parse into Markdown and structured elements → chunk and index into your knowledge base.
+2. **Agent document understanding** — Let your agent read contracts, reports, manuals, and forms through structured outputs instead of raw files.
+3. **Structured information extraction** — Parse documents first, then pass clean text blocks, tables, and metadata into downstream extraction, summarization, or decision nodes.
+4. **Layout-aware processing** — Use titles, page coordinates, tables, and image blocks to support more accurate retrieval, routing, and document automation.
+
+---
+
 ## Usage
 
 1. Install this plugin in Dify
-2. Configure Provider credentials (`x-ti-app-id` and `x-ti-secret-code`)
+2. Configure Provider — leave credentials empty for free API, or fill in for paid API
 3. Use the Parse tool in Workflow or Agent applications
 4. Upload a file and configure parsing parameters
-5. Get structured content including markdown, elements, and optional pages/title_tree/images
+5. Use the returned `text`, `elements`, and `images` in downstream nodes
 
 ---
 
@@ -281,8 +336,13 @@ The `metadata` field provides contextual information:
 
 ## Notes
 
-- The `text` field contains the full Markdown representation suitable for direct display.
-- The `elements` field provides structured data for advanced processing and analysis.
+- The `text` field is suitable for direct display or LLM input.
+- The `elements` field is useful for structured processing, chunking, highlighting, and further analysis.
+- The `images` field provides image resources for preview or multimodal workflows.
 - The `pages` and `title_tree` fields offer document structure insights.
 - When `include_image_data` is enabled, images with base64 data are automatically uploaded to Dify's file system, and the `images` array contains the uploaded file information.
 - Coordinates are normalized to [0, 1] range relative to page dimensions. To convert to pixels, multiply by page width/height.
+
+---
+
+Tags: RAG, Agent, Document Parsing, Structured Extraction, Knowledge Ingestion, PDF Parsing, Markdown, Tables, Layout Parsing

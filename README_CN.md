@@ -1,27 +1,59 @@
-# xParse 文档解析工具
+# xParse —— 面向 RAG 和 Agent 的智能文档解析
 
 **作者：** intsig-textin  
-**版本：** 1.2.0  
+**版本：** 1.2.1
 **类型：** tool
 
 ---
 
 ## 简介
 
-xParse 文档解析工具可以从多种文件格式（PDF、WORD、EXCEL、PPT、图片等）中提取结构化内容，并将其转换为 AI 友好的结构化数据，包含丰富的元数据。
+将复杂文档解析为 Markdown、结构化元素、表格和图片，服务于 RAG 管线和 Agent 工作流。
+
+xParse 是一款面向 RAG 管线和 Agent 工作流的结构化文档解析服务。它可将 PDF、Word、Excel、PowerPoint、图片等文件解析为模型可用的输出，包括 Markdown 文本、结构化元素、表格和图片。
+
+与简单的文档转文本工具不同，xParse 专为需要更丰富文档结构和版面感知理解的工作流设计。它帮助将复杂文件转化为可用于知识入库、检索、Agent 推理、信息抽取和下游自动化的内容。
+
+当你的工作流需要的不仅是纯文本输出时，请使用 xParse —— 例如，当你需要文档章节、标题、表格、图片块、页面级元数据，或可以传递给 Dify 后续节点的结构化内容元素时。xParse 在 `text` 字段返回 Markdown，在 `elements` 中返回结构化块，在 `images` 中返回图片资源，比简单的纯 Markdown 解析器更适合多步骤工作流。
+
+**同时支持免费 API 和付费 API** — 安装后即可直接使用，无需任何凭证。
+
+---
+
+## 适用场景
+
+- RAG 文档预处理
+- 知识库数据入库
+- Agent 文档阅读与推理
+- 结构化信息抽取
+- 表格与版面感知解析
+- 多步骤工作流自动化
+- 图片感知的文档理解
+
+---
+
+## 快速开始
+
+### 1. 免费 API（默认，无需凭证）
+
+只需在 Dify 中安装插件即可直接使用 — **无需任何凭证**。配置提供商时将 `x-ti-app-id` 和 `x-ti-secret-code` 留空即可。
+
+免费 API 支持 PDF 和图片（JPG/PNG/BMP/TIFF/WebP），每日上限 1000 页。
+
+### 2. 付费 API（可选）
+
+如需更多用量或更多格式（Word/Excel/PPT/HTML/OFD 等 20+ 常见格式），请前往 [Textin 控制台](https://www.textin.com/user/login?redirect=%252Fconsole%252Fdashboard%252Fsetting&from=xparse-dify-plugin)获取凭证，并在提供商配置中填入 `x-ti-app-id` 和 `x-ti-secret-code`。
 
 ---
 
 ## 提供商凭证
 
-在 Dify 中配置此插件时，需要提供以下凭证：
-
-> **获取凭证：** 请[登录 Textin](https://www.textin.com/console/dashboard/setting)，前往 **工作台 → 账号设置 → 开发者信息** 查看您的 `x-ti-app-id` 和 `x-ti-secret-code`。
-
 | 参数 | 类型 | 必填 | 说明 |
 | --------- | ---- | -------- | ---------- |
-| `x-ti-app-id` | secret-input | 是 | Textin 应用 ID。请[登录 Textin](https://www.textin.com/console/dashboard/setting)，前往"工作台 → 账号设置 → 开发者信息"查看 x-ti-app-id。详情请参阅 [API 文档](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync)。 |
-| `x-ti-secret-code` | secret-input | 是 | Textin 密钥。请[登录 Textin](https://www.textin.com/console/dashboard/setting)，前往"工作台 → 账号设置 → 开发者信息"查看 x-ti-secret-code。详情请参阅 [API 文档](https://docs.textin.com/api-reference/endpoint/xparse/v1/parse-sync)。 |
+| `x-ti-app-id` | secret-input | 否 | Textin 应用 ID。仅付费 API 需要，留空则使用免费 API。 |
+| `x-ti-secret-code` | secret-input | 否 | Textin 密钥。仅付费 API 需要，留空则使用免费 API。 |
+
+> **获取付费 API 凭证：** 请[登录 Textin](https://www.textin.com/console/dashboard/setting)，前往 **工作台 → 账号设置 → 开发者信息** 查看您的 `x-ti-app-id` 和 `x-ti-secret-code`。
 
 ---
 
@@ -57,6 +89,20 @@ xParse 解析工具提供参数来自定义文档处理并控制返回数据的�
 | `pages` | boolean | 否 | `false` | 是否返回页面元信息列表（页面尺寸、page_image_url、每页的 element_ids） |
 | `title_tree` | boolean | 否 | `false` | 是否返回层级标题树（目录） |
 | `table_view` | select | 否 | `html` | Markdown 中表格的格式。选项：`markdown`（简单）、`html`（支持合并单元格的复杂表格） |
+
+---
+
+## API 限制
+
+| 限制项 | 免费 API | 付费 API |
+|--------|----------|----------|
+| 支持格式 | PDF、图片（JPG/PNG/BMP/TIFF/WebP） | 20+ 格式（PDF、图片、Word、Excel、PPT、HTML、OFD 等） |
+| 每日用量 | 1000 页 | 按套餐 |
+| 文件大小 | 10MB | 500MB |
+| PDF 页数 | — | 1000 页 |
+| XLS/XLSX/CSV | — | 每 sheet ≤ 2000 行 × 100 列 |
+| TXT | — | ≤ 100KB |
+| 图片尺寸 | 20～20000 像素 | 20～20000 像素 |
 
 ---
 
@@ -261,13 +307,22 @@ xParse 解析工具提供参数来自定义文档处理并控制返回数据的�
 
 ---
 
+## 典型工作流用例
+
+1. **RAG 知识入库** — 上传 PDF 或 Office 文件 → 解析为 Markdown 和结构化元素 → 分块并索引到知识库。
+2. **Agent 文档理解** — 让你的 Agent 通过结构化输出阅读合同、报告、手册和表单，而不是直接处理原始文件。
+3. **结构化信息抽取** — 先解析文档，再将干净的文本块、表格和元数据传递到下游的抽取、摘要或决策节点。
+4. **版面感知处理** — 利用标题、页面坐标、表格和图片块支持更精准的检索、路由和文档自动化。
+
+---
+
 ## 使用方法
 
 1. 在 Dify 中安装此插件
-2. 配置提供商凭证（`x-ti-app-id` 和 `x-ti-secret-code`）
+2. 配置提供商 — 留空凭证使用免费 API，或填入凭证使用付费 API
 3. 在工作流或智能体应用中使用解析工具
 4. 上传文件并配置解析参数
-5. 获取结构化内容，包括 markdown、elements 以及可选的 pages/title_tree/images
+5. 在下游节点中使用返回的 `text`、`elements` 和 `images`
 
 ---
 
@@ -281,8 +336,13 @@ xParse 解析工具提供参数来自定义文档处理并控制返回数据的�
 
 ## 注意事项
 
-- `text` 字段包含完整的 Markdown 表示，适合直接显示。
-- `elements` 字段提供结构化数据，用于高级处理和分析。
+- `text` 字段适合直接展示或作为 LLM 输入。
+- `elements` 字段适用于结构化处理、分块、高亮和进一步分析。
+- `images` 字段提供图片资源，用于预览或多模态工作流。
 - `pages` 和 `title_tree` 字段提供文档结构洞察。
 - 启用 `include_image_data` 时，带 base64 数据的图片会自动上传到 Dify 文件系统，`images` 数组包含上传的文件信息。
 - 坐标已归一化到 [0, 1] 范围，相对于页面尺寸。要转换为像素，乘以页面宽度/高度。
+
+---
+
+标签：RAG、Agent、文档解析、结构化抽取、知识入库、PDF 解析、Markdown、表格、版面解析

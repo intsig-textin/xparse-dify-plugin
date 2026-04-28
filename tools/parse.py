@@ -13,55 +13,44 @@ from dify_plugin.errors.tool import ToolProviderCredentialValidationError
 
 logger = logging.getLogger(__name__)
 
-XPARSE_API_URL = "https://api.textin.com/api/v1/xparse/parse/sync"
+PAID_API_URL = "https://api.textin.com/api/v1/xparse/parse/sync"
+FREE_API_URL = "https://api.textin.com/api/v1/agent/parse/sync"
 
 
 @dataclass
 class Credentials:
     x_ti_app_id: str
     x_ti_secret_code: str
+    is_free_api: bool
 
 
 class ParseTool(Tool):
     def _get_credentials(self) -> Credentials:
-        """Get and validate credentials."""
-        x_ti_app_id = self.runtime.credentials.get("x_ti_app_id")
-        x_ti_secret_code = self.runtime.credentials.get("x_ti_secret_code")
+        """Get credentials. Returns free API mode if credentials are empty."""
+        x_ti_app_id = self.runtime.credentials.get("x_ti_app_id", "")
+        x_ti_secret_code = self.runtime.credentials.get("x_ti_secret_code", "")
 
-        if not x_ti_app_id:
-            logger.exception("Missing x_ti_app_id in credentials")
-            raise ToolProviderCredentialValidationError(
-                "Please input x-ti-app-id"
-            )
-        if not x_ti_secret_code:
-            logger.exception("Missing x_ti_secret_code in credentials")
-            raise ToolProviderCredentialValidationError(
-                "Please input x-ti-secret-code"
+        if x_ti_app_id and x_ti_secret_code:
+            return Credentials(
+                x_ti_app_id=x_ti_app_id,
+                x_ti_secret_code=x_ti_secret_code,
+                is_free_api=False,
             )
 
         return Credentials(
-            x_ti_app_id=x_ti_app_id, x_ti_secret_code=x_ti_secret_code
+            x_ti_app_id="",
+            x_ti_secret_code="",
+            is_free_api=True,
         )
 
     def validate_api_credentials(self) -> None:
-        """Validate API credentials by making a simple request."""
+        """Validate API credentials for paid API mode."""
         credentials = self._get_credentials()
-        try:
-            headers = {
-                "x-ti-app-id": credentials.x_ti_app_id,
-                "x-ti-secret-code": credentials.x_ti_secret_code,
-            }
-            # Try to make a simple request to validate credentials
-            # Note: xparse doesn't have a healthcheck endpoint, so we'll validate during actual usage
-            # For now, just check that credentials are not empty
-            if not credentials.x_ti_app_id or not credentials.x_ti_secret_code:
-                raise ToolProviderCredentialValidationError(
-                    "Invalid credentials"
-                )
-        except Exception as e:
-            logger.exception(f"Validate API credentials failed. msg: {e}")
+        if credentials.is_free_api:
+            return
+        if not credentials.x_ti_app_id or not credentials.x_ti_secret_code:
             raise ToolProviderCredentialValidationError(
-                f"Validate API credentials failed. reason: {e}"
+                "Invalid credentials"
             )
 
     def _build_parse_config(self, tool_parameters: dict[str, Any]) -> dict[str, Any]:
@@ -102,11 +91,17 @@ class ParseTool(Tool):
         # Build parse configuration
         parse_config = self._build_parse_config(tool_parameters)
 
-        # Prepare request
-        headers = {
-            "x-ti-app-id": credentials.x_ti_app_id,
-            "x-ti-secret-code": credentials.x_ti_secret_code,
-        }
+        # Select API URL and headers based on credentials
+        if credentials.is_free_api:
+            api_url = FREE_API_URL
+            headers = {"X-From": "dify"}
+        else:
+            api_url = PAID_API_URL
+            headers = {
+                "x-ti-app-id": credentials.x_ti_app_id,
+                "x-ti-secret-code": credentials.x_ti_secret_code,
+                "X-From": "dify",
+            }
 
         # Prepare multipart/form-data with config as JSON
         config_json = json.dumps(parse_config, ensure_ascii=False)
@@ -118,7 +113,7 @@ class ParseTool(Tool):
         try:
             # Call xparse Parse Sync API
             response = requests.post(
-                XPARSE_API_URL, headers=headers, files=files, timeout=300
+                api_url, headers=headers, files=files, timeout=300
             )
             response.raise_for_status()
 
