@@ -1,15 +1,15 @@
 identity:
   author: "intsig-textin"
   name: "xparse"
-  version: "1.2.1"
+  version: "1.2.2"
   label:
     en_US: "xParse"
-    zh_Hans: "xParse"
+    zh_Hans: "文档解析 OCR - TextIn"
     pt_BR: "xParse"
     ja_JP: "xParse"
   description:
     en_US: "Parse complex documents into Markdown, structured elements, tables, and images for RAG pipelines and agent workflows."
-    zh_Hans: "将复杂文档解析为 Markdown、结构化元素、表格和图片，服务于 RAG 管线和 Agent 工作流。"
+    zh_Hans: "专为LLM下游任务设计，能精准识别PDF/Word/Excel/图片中的内容并转成标准格式（markdown、json），尤其擅长复杂文档的理解和还原，免费为开发者提供1000页/天额度。"
     pt_BR: "Analise documentos complexos em Markdown, elementos estruturados, tabelas e imagens para pipelines RAG e fluxos de trabalho de agentes."
     ja_JP: "複雑なドキュメントを Markdown、構造化要素、テーブル、画像に解析し、RAG パイプラインやエージェントワークフローに活用します。"
   icon: "icon.svg"
