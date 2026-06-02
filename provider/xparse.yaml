@@ -8,10 +8,10 @@ identity:
     pt_BR: "OCR de Documentos - TextIn"
     ja_JP: "ドキュメント解析 OCR - TextIn"
   description:
-    en_US: "Designed for LLM downstream tasks, accurately recognizes content in PDF/Word/Excel/images and converts to standard formats (markdown, json). Excels at complex document understanding and restoration. Free 1000 pages/day for developers."
-    zh_Hans: "专为LLM下游任务设计，能精准识别PDF/Word/Excel/图片中的内容并转成标准格式（markdown、json），尤其擅长复杂文档的理解和还原，免费为开发者提供1000页/天额度。"
-    pt_BR: "Projetado para tarefas downstream de LLM, reconhece com precisão o conteúdo em PDF/Word/Excel/imagens e converte para formatos padrão (markdown, json). Excelente na compreensão e restauração de documentos complexos. 1000 páginas/dia grátis para desenvolvedores."
-    ja_JP: "LLM下流タスク向けに設計。PDF/Word/Excel/画像のコンテンツを正確に認識し、標準フォーマット（markdown、json）に変換します。複雑なドキュメントの理解と復元に優れ、開発者に毎日1000ページの無料枠を提供します。"
+    en_US: "xParse is designed for LLM downstream tasks, accurately recognizes content in PDF/Word/Excel/images and converts to standard formats (markdown, json). Excels at complex document understanding and restoration. Free 1000 pages/day for developers."
+    zh_Hans: "xParse 专为LLM下游任务设计，能精准识别PDF/Word/Excel/图片中的内容并转成标准格式（markdown、json），尤其擅长复杂文档的理解和还原，免费为开发者提供1000页/天额度。"
+    pt_BR: "xParse é projetado para tarefas downstream de LLM, reconhece com precisão o conteúdo em PDF/Word/Excel/imagens e converte para formatos padrão (markdown, json). Excelente na compreensão e restauração de documentos complexos. 1000 páginas/dia grátis para desenvolvedores."
+    ja_JP: "xParse はLLM下流タスク向けに設計。PDF/Word/Excel/画像のコンテンツを正確に認識し、標準フォーマット（markdown、json）に変換します。複雑なドキュメントの理解と復元に優れ、開発者に毎日1000ページの無料枠を提供します。"
   icon: "icon.svg"
   tags: ['rag', 'utilities']
 
