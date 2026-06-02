@@ -3,15 +3,15 @@ type: plugin
 author: intsig-textin
 name: xparse
 label:
-  en_US: xParse
-  ja_JP: xParse
+  en_US: Document OCR - TextIn
+  ja_JP: ドキュメント解析 OCR - TextIn
   zh_Hans: 文档解析 OCR - TextIn
-  pt_BR: xParse
+  pt_BR: OCR de Documentos - TextIn
 description:
-  en_US: Parse complex documents into Markdown, structured elements, tables, and images for RAG pipelines and agent workflows.
-  ja_JP: 複雑なドキュメントを Markdown、構造化要素、テーブル、画像に解析し、RAG パイプラインやエージェントワークフローに活用します。
+  en_US: Designed for LLM downstream tasks, accurately recognizes content in PDF/Word/Excel/images and converts to standard formats (markdown, json). Excels at complex document understanding and restoration. Free 1000 pages/day for developers.
+  ja_JP: LLM下流タスク向けに設計。PDF/Word/Excel/画像のコンテンツを正確に認識し、標準フォーマット（markdown、json）に変換します。複雑なドキュメントの理解と復元に優れ、開発者に毎日1000ページの無料枠を提供します。
   zh_Hans: 专为LLM下游任务设计，能精准识别PDF/Word/Excel/图片中的内容并转成标准格式（markdown、json），尤其擅长复杂文档的理解和还原，免费为开发者提供1000页/天额度。
-  pt_BR: Analise documentos complexos em Markdown, elementos estruturados, tabelas e imagens para pipelines RAG e fluxos de trabalho de agentes.
+  pt_BR: Projetado para tarefas downstream de LLM, reconhece com precisão o conteúdo em PDF/Word/Excel/imagens e converte para formatos padrão (markdown, json). Excelente na compreensão e restauração de documentos complexos. 1000 páginas/dia grátis para desenvolvedores.
 icon: icon.svg
 icon_dark: icon-dark.svg
 resource:
